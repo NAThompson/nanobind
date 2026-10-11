@@ -116,6 +116,7 @@ set(TEST_NAMES
   enum
   eval
   ndarray
+  vectorize
   jax
   tensorflow
   exception
@@ -244,6 +245,7 @@ set(TEST_FILES
   test_stl_bind_vector.py
   test_chrono.py
   test_ndarray.py
+  test_vectorize.py
   test_jax.py
   test_tensorflow.py
   test_stubs.py

@@ -1338,6 +1338,36 @@ converting to Python.
     conversion <noconvert>`, as above.
 
 
+Vectorizing scalar functions
+----------------------------
+
+The following helper turns a scalar C++ function into one that operates
+element-wise on arrays. It requires an additional include directive:
+
+.. code-block:: cpp
+
+   #include <nanobind/vectorize.h>
+
+.. cpp:function:: template <typename R, typename... A> auto vectorize(R (*f)(A...))
+
+   Return a callable that can be passed to :cpp:func:`module_::def`. The
+   function ``f`` must take one or more arithmetic arguments and return an
+   arithmetic value. Each argument of the resulting Python function may be a
+   CPU array of any shape and strides (anything that can be converted to
+   ``nb::ndarray<const A, nb::device::cpu>``, including non-contiguous
+   views), or a Python scalar. Arguments are combined using NumPy-style
+   broadcasting. A mismatch raises :py:exc:`ValueError`. The result is a new
+   C-contiguous ``nb::ndarray<nb::numpy, R>``; it is a 0-dimensional array if all
+   arguments are scalars.
+
+   .. code-block:: cpp
+
+      double hyp(double a, double b) { return std::sqrt(a*a + b*b); }
+
+      m.def("hyp", nb::vectorize(&hyp));
+
+   To vectorize a lambda, convert it to a function pointer using unary ``+``.
+
 Evaluating Python expressions from strings
 ------------------------------------------
 
